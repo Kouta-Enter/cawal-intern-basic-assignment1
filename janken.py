@@ -1,7 +1,7 @@
 """プレイヤー vs コンピュータのじゃんけん"""
 import random
-choice=input()
-hand={'グー','チョキ','パー'}
+choice=input("input")
+hand=['グー','チョキ','パー']
 C_choice=random.choice(hand)
 print('あなた：',choice)
 print('相手：',C_choice)
