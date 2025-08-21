@@ -8,8 +8,7 @@ if not os.path.exists('./CAWAL/basicassignment01/todo_save.json'):
 while 1:
     user_input=input(">").split()
     with open('./CAWAL/basicassignment01/todo_save.json', 'r', encoding="utf-8") as f:
-        s=f.read()
-        todo_dict = json.loads(s)
+        todo_dict = json.load(f)
     if user_input[0]=='list':
         if len(todo_dict)==0:
             print("(タスクなし)")
