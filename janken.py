@@ -1,6 +1,6 @@
 """プレイヤー vs コンピュータのじゃんけん"""
 import random
-choice=input("input")
+choice=input("あなたの出す手を入力>")
 hand=['グー','チョキ','パー']
 C_choice=random.choice(hand)
 print('あなた：',choice)
@@ -16,4 +16,4 @@ elif choice=='グー' and C_choice=='パー' \
     or choice=='パー' and C_choice=='チョキ':
     print('->負け!')
 else:
-    print("error")
+    print("error:入力はグー、チョキ、パーのいずれかにしてください")
