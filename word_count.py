@@ -1,0 +1,10 @@
+""""step1-課題3:任意のテキストファイル(英語のテキスト）を読み込み、行数・単語数・文字数を出力"""
+import sys
+args = sys.argv
+with open(args[1], 'r', encoding='utf-8') as f:
+    s = f.read()
+    lines=len(s.splitlines())
+    words=len(s.split())
+    length=len(s)
+with open('word_count_result.txt', 'w', encoding='utf-8') as f:
+    f.write('行数：'+str(lines) +'\n単語数:'+ str(words)+'\n文字数:'+str(length))
