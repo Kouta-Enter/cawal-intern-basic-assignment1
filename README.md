@@ -19,7 +19,8 @@ dominate the majority of the world's ecosystems, and themselves range from tiny 
 trees.
 ```
 
-`$ python word_count.py test.txt`をターミナルで実行すると、word_count_result.txtが生成される。 word_count_result.txt:
+`$ python word_count.py test.txt`をターミナルで実行すると、word_count_result.txtが生成される。
+word_count_result.txt:
 ```
 行数：9
 単語数:154
