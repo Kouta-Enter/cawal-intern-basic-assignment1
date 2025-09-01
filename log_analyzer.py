@@ -63,6 +63,10 @@ def main() -> int:
         print(f"Error: file not found -> {args.logfile}", file=sys.stderr)
         return 1
 
+    if args.top<1:
+        print(f"Error:invalid value ->{args.top}")
+        return 1
+
     counts = count_ips(args.logfile)
 
     # Print top N
