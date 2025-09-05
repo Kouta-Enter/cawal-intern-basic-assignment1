@@ -88,9 +88,9 @@ def save_results(counts: Counter, outfile: Path) -> None:
         )
         if counts["not_start_with_ip"] >= 1:
             w.write(
-                "先頭がIPアドレスでない行を検知しました。\
-logが想定と異なる可能性があります。\
-引数に指定したファイルの内容を確認してください。"
+                "先頭がIPアドレスでない行を検知しました。\n\
+logが想定と異なる可能性があります。\n\
+引数に指定したファイルの内容を確認してください。\n"
             )
         for ip, cnt in counts.most_common():
             if ip == "not_start_with_ip":
