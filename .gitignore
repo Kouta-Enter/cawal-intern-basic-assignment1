@@ -1,4 +1,4 @@
-settings.json
 access.log
+settings.json
 todo_save.json
-result_????????.txt
+result_*.txt
