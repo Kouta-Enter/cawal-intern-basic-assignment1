@@ -124,7 +124,7 @@ logが想定と異なる可能性があります。\n\
 
     # Save all results with today's date
     today = dt.date.today().strftime("%Y%m%d")
-    outname = f"results/result_{today}.txt"
+    outname = f"result_{today}.txt"
     outpath = Path(outname)
     save_results(counts, outpath)
     print(f"\nSaved full results to: {outpath.resolve()}")
