@@ -1,0 +1,11 @@
+services:
+    app:
+        build: .
+        volumes:
+        - .:/root
+        command: python3 log_analyzer.py access.log
+        ports:
+        - 80:80
+
+
+
