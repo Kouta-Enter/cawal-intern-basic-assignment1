@@ -20,17 +20,15 @@ from collections import Counter
 from pathlib import Path
 import sys
 
-#IPv4にマッチ
+# IPv4にマッチ
 IPv4_AT_LINE_START = re.compile(r"^((\d{1,3}\.){3}\d{1,3}\s)")
-#"::"による省略のないIPv6にマッチ
-IPv6_AT_LINE_START_1 = re.compile(
-    r"^(([a-f0-9]{1,4}:){7}[a-f0-9]{1,4}\s)"
-)
-#"::"で省略されたIPv6にマッチ
+# "::"による省略のないIPv6にマッチ
+IPv6_AT_LINE_START_1 = re.compile(r"^(([a-f0-9]{1,4}:){7}[a-f0-9]{1,4}\s)")
+# "::"で省略されたIPv6にマッチ
 IPv6_AT_LINE_START_2 = re.compile(
     r"^(([a-f0-9]{1,4}:){0,6}[a-f0-9]{0,4}::([a-f0-9]{1,4}:){0,6}[a-f0-9]{0,4}\s)"
 )
-IPv4_MAPPED=re.compile(r"^(::ffff:(\d{1,3}\.){3}\d{1,3}\s)")
+IPv4_MAPPED = re.compile(r"^(::ffff:(\d{1,3}\.){3}\d{1,3}\s)")
 LINE_WRITTEN = re.compile(r"\S")
 
 
@@ -56,7 +54,7 @@ def count_ips(log_path: Path) -> Counter:
             m4 = IPv4_AT_LINE_START.match(line)
             m6_1 = IPv6_AT_LINE_START_1.match(line)
             m6_2 = IPv6_AT_LINE_START_2.match(line)
-            m4_mapped=IPv4_MAPPED.match(line)
+            m4_mapped = IPv4_MAPPED.match(line)
             l = LINE_WRITTEN.match(line)
             if m4:
                 ip = m4.group(1)
@@ -130,7 +128,6 @@ logが想定と異なる可能性があります。\n\
     outpath = Path(outname)
     save_results(counts, outpath)
     print(f"\nSaved full results to: {outpath.resolve()}")
-
     return 0
 
 
