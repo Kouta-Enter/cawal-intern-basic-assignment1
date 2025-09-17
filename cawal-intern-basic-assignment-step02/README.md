@@ -1,20 +1,39 @@
-### Part2 Docker環境でPythonアプリをコンテナ化
+### Part 3 簡易Web APIでログ解析結果を返す
 - 課題のリンク:https://www.notion.so/2-1cd5b4c8502981c4b548dcc439bf2a3b?source=copy_link
 - チケットのリンク:https://www.notion.so/IT-Step2-24e5b4c85029813ba746d65986aaba23?source=copy_link
-**目的**: Dockerfileの作成と、PythonアプリのDocker化体験
+
+**目的**: PythonでのWeb API実装とDocker連携を理解する
 
 **内容**:
 
-- 最小構成の`Dockerfile`を作成し、ログファイルをマウントして結果を出力できるようにする
-- `docker-compose`で開発用環境を立ち上げられるようにする
-    - 課題1のスクリプトをDockerコンテナで動かせるようにする
+- FlaskでWeb APIを作成し、ログファイルを解析して結果をJSONで返す(GETリクエスト)
+    - 各IPアドレスのアクセス回数をカウント
+        - `/analyze`
+    - 上位5件を出力
+        - `/analyze?top=5`
 
 **達成条件**:
 
-- `Dockerfile`, `docker-compose.yml`を使って、`docker compose up`で実行可能
-- `volumes`でホストの`access.log`をマウント
-- 出力ファイルがホストからも見えること
+- APIサーバがリクエストを受けてログを解析し、上位N件の結果を返す
+- Docker Composeで起動
+- curlやPostman or ブラウザで結果確認が可能
 
-**実行方法**:
-- /rootにhostのカレントディレクトリをマウントして、workdirを/rootに変更
-```docker run -it --rm -v `pwd`:/root -w /root python:3.9 python3 log_analyzer.py access.log```
+**フォルダ構成**:
+
+```
+cawal-intern-basic-assignment-step02/
+  README.md
+  Dockerfile
+  docker-compose.yml
+  log-analyzer.py
+  requirements.txt
+  appdata/
+    access.log
+```
+
+**実行方法**
+
+- `cawal-intern-basic-assignment-step02/`で`docker-compose up`を実行する
+- ブラウザで`https://<ホストのIP>:5000`に飛ぶ。`success`と表示される。
+- `https://<ホストのIP>:5000/analyze`で解析結果を表示する。
+- `https://<ホストのIP>:5000/analyze?top=<表示件数>`で解析結果を上から指定した件数だけ表示する。
