@@ -5,7 +5,8 @@
 log_analyzer.py
 
 Usage:
-    python log_analyzer.py access.log
+    - docker-compose up
+    - view http://35.74.238.217:5000
 
 What it does:
 - Counts requests per IP address
@@ -13,12 +14,15 @@ What it does:
 - Saves the full result to result_YYYYMMDD.txt (using today's date)
 """
 
-import argparse
 import datetime as dt
+import json
 import re
 from collections import Counter
 from pathlib import Path
 import sys
+import flask
+
+app = flask.Flask(__name__)
 
 # IPv4にマッチ
 IPv4_AT_LINE_START = re.compile(r"^((\d{1,3}\.){3}\d{1,3}\s)")
@@ -30,20 +34,6 @@ IPv6_AT_LINE_START_2 = re.compile(
 )
 IPv4_MAPPED = re.compile(r"^(::ffff:(\d{1,3}\.){3}\d{1,3}\s)")
 LINE_WRITTEN = re.compile(r"\S")
-
-
-def parse_args() -> argparse.Namespace:
-    """コマンドライン引数を処理する。"""
-    p = argparse.ArgumentParser(description="Count requests per IP from an access.log.")
-    p.add_argument("logfile", type=Path, help="Path to access.log")
-    p.add_argument(
-        "-n",
-        "--top",
-        type=int,
-        default=5,
-        help="How many top IPs to print (default: 5)",
-    )
-    return p.parse_args()
 
 
 def count_ips(log_path: Path) -> Counter:
@@ -96,40 +86,42 @@ logが想定と異なる可能性があります。\n\
             w.write(f"{ip}\t{cnt}\n")
 
 
-def main() -> int:
-    """全体の処理をまとめる実行部分。"""
-    args = parse_args()
-    if not args.logfile.exists():
-        print(f"Error: file not found -> {args.logfile}", file=sys.stderr)
-        return 1
+@app.route("/")
+def hello():
+    """test"""
+    return "success"
 
-    if args.top < 1:
-        print(f"Error:invalid value ->{args.top}")
-        return 1
 
-    counts = count_ips(args.logfile)
-
-    # Print top N
-    if counts["not_start_with_ip"] >= 1:
-        print(
-            "先頭がIPアドレスでない行を検知しました。\n\
-logが想定と異なる可能性があります。\n\
-引数に指定したファイルの内容を確認してください。"
-        )
-    print(f"Top {min(args.top, len(counts))} IPs:")
-    for ip, cnt in counts.most_common(args.top):
-        if ip == "not_start_with_ip":
-            continue
-        print(f"{ip}\t{cnt}")
-
+@app.route("/analyze", methods=["GET"])
+def getdata():
+    """GETリクエストのキーに応じてlog_analyzer.pyを動かし、jsonを受け取る"""
+    p = Path("./appdata/access.log")
+    if not p.exists():
+        print("Error: file not found -> ./access.log", file=sys.stderr)
+        return "Error: file not found"
+    counts = count_ips(p)
     # Save all results with today's date
     today = dt.date.today().strftime("%Y%m%d")
-    outname = f"result_{today}.txt"
+    outname = f"/root/appdata/result_{today}.txt"
     outpath = Path(outname)
     save_results(counts, outpath)
-    print(f"\nSaved full results to: {outpath.resolve()}")
-    return 0
+    get_key = flask.request.args.get("top", type=int)
+    output = {}
+    if not get_key:
+        for ip, cnt in counts.most_common():
+            if ip == "not_start_with_ip":
+                continue
+            output[ip] = cnt
+        json_out = json.dumps(output, indent=4)
+        return json_out
+    else:
+        for ip, cnt in counts.most_common(get_key):
+            if ip == "not_start_with_ip":
+                continue
+            output[ip] = cnt
+        json_out = json.dumps(output, indent=4)
+        return json_out
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    app.run(host="0.0.0.0", port=5000)

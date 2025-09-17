@@ -1,11 +1,11 @@
 services:
     app:
-        build: .
-        volumes:
-        - .:/root
-        command: python3 log_analyzer.py access.log
-        ports:
-        - 80:80
+      build: .
+      ports:
+        - "5000:5000"
+      volumes:
+        - ./appdata:/root/appdata
+      command: python3 log_analyzer.py access.log
 
 
 
